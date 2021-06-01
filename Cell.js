@@ -13,17 +13,17 @@ class Cell {
 
     display() {
 
+        textAlign(CENTER, CENTER);
+
         if (this.x == player.x && this.y == player.y) {
 
             if (this.emoji == "🌲" || this.emoji == "🌳") {
                 textSize(90);
-                text(this.emoji, this.x * cellSize, this.y * cellSize-25);
+                text(this.emoji, this.x * cellSize, this.y * cellSize - 25);
             }
             player.display();
             return;
         }
-        textAlign(CENTER, CENTER);
-
         if (this.emoji == "🌲" || this.emoji == "🌳") {
             textSize(90);
             text(this.emoji, this.x * cellSize, this.y * cellSize-25);

@@ -1,5 +1,7 @@
 let colors = {
-    background: "#B0C3A4"
+    dark: "#5C764C",
+    mid: "#85A075",
+    light: "#B0C3A4",
 }
 let cells;
 let player;
@@ -9,6 +11,8 @@ let cellSize = 20;
 function setup() {
 
     createCanvas(windowWidth, windowHeight);
+
+    createBackground();
 
     cells = [...Array(floor(windowWidth / cellSize - 1))].map(e => Array(floor(windowHeight / cellSize - 1)));
 
@@ -32,7 +36,8 @@ function setup() {
 
 function draw() {
 
-    background(colors.background);
+    // background(colors.background);
+    updatePixels();
 
     if (frameCount % (24 * 1) == 1) {
         live();
@@ -113,4 +118,43 @@ function plant(x, y) {
 
     cells[x][y].state = true;
     cells[x][y].update();
+}
+
+function createBackground() {
+
+    let colorA = colors.dark;
+    let colorB = colors.light;
+
+    for (let i = 0; i < width; i++) {
+        for (let j = 0; j < height; j++) {
+
+            let col;
+
+            if (random() > 0.5) {
+                col = colorLerp(colorA, colorB, noise(i*0.002, j*0.002));
+
+            } else {
+                col = colors.mid;
+            }
+            set(i, j, color(col));
+        }
+    }
+    updatePixels();
+}
+
+function colorLerp(a, b, ratio) {
+
+    let ah = parseInt(a.replace(/#/g, ""), 16),
+        ar = ah >> 16,
+        ag = ah >> 8 & 0xff,
+        ab = ah & 0xff,
+        bh = parseInt(b.replace(/#/g, ""), 16),
+        br = bh >> 16,
+        bg = bh >> 8 & 0xff,
+        bb = bh & 0xff,
+        rr = ar + ratio * (br - ar),
+        rg = ag + ratio * (bg - ag),
+        rb = ab + ratio * (bb - ab);
+
+    return "#" + ((1 << 24) + (rr << 16) + (rg << 8) + rb | 0).toString(16).slice(1);
 }
